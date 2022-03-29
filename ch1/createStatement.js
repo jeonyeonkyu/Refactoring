@@ -50,13 +50,13 @@ const createStatement = (invoice, plays) => {
     return data.performances.reduce((total, p) => total + p.amount, 0)
   }
 
-  const statementData = {}
-  statementData.customer = invoice.customer
-  statementData.performances = invoice.performances.map(enrichPerformance)
-  statementData.totalAmount = getTotalAmount(statementData)
-  statementData.totalVolumeCredits = getTotalVolumeCredits(statementData)
+  const result = {}
+  result.customer = invoice.customer
+  result.performances = invoice.performances.map(enrichPerformance)
+  result.totalAmount = getTotalAmount(result)
+  result.totalVolumeCredits = getTotalVolumeCredits(result)
 
-  return statementData
+  return result
 }
 
 export default createStatement

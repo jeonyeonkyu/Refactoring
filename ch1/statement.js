@@ -1,7 +1,15 @@
 // v3
 
 const statement = (invoice, plays) => {
-  const enrichPerformance = (aPerformance) => Object.assign({}, aPerformance)
+  const enrichPerformance = (aPerformance) => {
+    const result = Object.assign({}, aPerformance)
+    result.play = playFor(result)
+    return result
+  }
+
+  const playFor = (aPerformance) => {
+    return plays[aPerformance.playID]
+  }
 
   const statementData = {
     customer: invoice.customer,
@@ -10,10 +18,10 @@ const statement = (invoice, plays) => {
   return renderPainText(statementData, plays)
 }
 
-const renderPainText = (data, plays) => {
+const renderPainText = (data) => {
   const amountFor = (aPerformance) => {
     let result = 0
-    switch (playFor(aPerformance).type) {
+    switch (aPerformance.play.type) {
       case 'tragedy': {
         result = 40000
         if (aPerformance.audience > 30)
@@ -28,19 +36,15 @@ const renderPainText = (data, plays) => {
         break
       }
       default:
-        throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`)
+        throw new Error(`알 수 없는 장르: ${aPerformance.play.type}`)
     }
     return result
-  }
-
-  const playFor = (aPerformance) => {
-    return plays[aPerformance.playID]
   }
 
   const volumeCreditsFor = (aPerformance) => {
     let result = 0
     result += Math.max(aPerformance.audience - 30, 0)
-    if (playFor(aPerformance).type === 'comedy') {
+    if (aPerformance.play.type === 'comedy') {
       result += Math.floor(aPerformance.audience / 5)
     }
     return result
@@ -72,9 +76,9 @@ const renderPainText = (data, plays) => {
 
   let result = `청구 내역 (고객명: ${data.customer})\n`
   for (const aPerformance of data.performances) {
-    result += `  ${playFor(aPerformance).name}: ${usd(
-      amountFor(aPerformance)
-    )} (${aPerformance.audience}석)\n`
+    result += `  ${aPerformance.play.name}: ${usd(amountFor(aPerformance))} (${
+      aPerformance.audience
+    }석)\n`
   }
 
   result += `총액: ${usd(getTotalAmount())}\n`

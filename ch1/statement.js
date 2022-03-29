@@ -1,9 +1,11 @@
 // v3
 
 const statement = (invoice, plays) => {
+  const enrichPerformance = (aPerformance) => Object.assign({}, aPerformance)
+
   const statementData = {
     customer: invoice.customer,
-    performances: invoice.performances,
+    performances: invoice.performances.map(enrichPerformance),
   }
   return renderPainText(statementData, plays)
 }

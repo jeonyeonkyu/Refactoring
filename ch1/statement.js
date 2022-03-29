@@ -1,6 +1,11 @@
-// v2
+// v3
 
 const statement = (invoice, plays) => {
+  const statementData = {}
+  return renderPainText(statementData, invoice, plays)
+}
+
+const renderPainText = (data, invoice, plays) => {
   const amountFor = (aPerformance) => {
     let result = 0
     switch (playFor(aPerformance).type) {

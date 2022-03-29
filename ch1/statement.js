@@ -17,7 +17,7 @@ const statement = (invoice, plays) => {
   statementData.customer = invoice.customer
   statementData.performances = invoice.performances.map(enrichPerformance)
   statementData.totalAmount = getTotalAmount(statementData)
-  statementData.TotalVolumeCredits = getTotalVolumeCredits(statementData)
+  statementData.totalVolumeCredits = getTotalVolumeCredits(statementData)
 
   return renderPainText(statementData)
 }
@@ -75,19 +75,11 @@ const volumeCreditsFor = (aPerformance) => {
 }
 
 const getTotalVolumeCredits = (data) => {
-  let result = 0 // 적립포인트
-  for (const aPerformance of data.performances) {
-    result += aPerformance.volumeCredits
-  }
-  return result
+  return data.performances.reduce((total, p) => total + p.volumeCredits, 0)
 }
 
 const getTotalAmount = (data) => {
-  let result = 0
-  for (const aPerformance of data.performances) {
-    result += aPerformance.amount
-  }
-  return result
+  return data.performances.reduce((total, p) => total + p.amount, 0)
 }
 
 export default statement

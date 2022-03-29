@@ -44,22 +44,31 @@ const statement = (invoice, plays) => {
     }).format(aNumber / 100)
   }
 
+  const getTotalVolumeCredits = () => {
+    let result = 0 // 적립포인트
+    for (const aPerformance of invoice.performances) {
+      result += volumeCreditsFor(aPerformance)
+    }
+    return result
+  }
+
+  const getTotalAmount = () => {
+    let result = 0
+    for (const aPerformance of invoice.performances) {
+      result += amountFor(aPerformance)
+    }
+    return result
+  }
+
   let result = `청구 내역 (고객명: ${invoice.customer})\n`
-  let totalAmount = 0 // 총액
   for (const aPerformance of invoice.performances) {
     result += `  ${playFor(aPerformance).name}: ${usd(
       amountFor(aPerformance)
     )} (${aPerformance.audience}석)\n`
-    totalAmount += amountFor(aPerformance)
   }
 
-  let volumeCredits = 0 // 적립포인트
-  for (const aPerformance of invoice.performances) {
-    volumeCredits += volumeCreditsFor(aPerformance)
-  }
-
-  result += `총액: ${usd(totalAmount)}\n`
-  result += `적립 포인트: ${volumeCredits}점\n`
+  result += `총액: ${usd(getTotalAmount())}\n`
+  result += `적립 포인트: ${getTotalVolumeCredits()}점\n`
   return result
 }
 

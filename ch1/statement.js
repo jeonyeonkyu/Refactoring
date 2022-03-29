@@ -1,11 +1,14 @@
 // v3
 
 const statement = (invoice, plays) => {
-  const statementData = {}
-  return renderPainText(statementData, invoice, plays)
+  const statementData = {
+    customer: invoice.customer,
+    performances: invoice.performances,
+  }
+  return renderPainText(statementData, plays)
 }
 
-const renderPainText = (data, invoice, plays) => {
+const renderPainText = (data, plays) => {
   const amountFor = (aPerformance) => {
     let result = 0
     switch (playFor(aPerformance).type) {
@@ -51,7 +54,7 @@ const renderPainText = (data, invoice, plays) => {
 
   const getTotalVolumeCredits = () => {
     let result = 0 // 적립포인트
-    for (const aPerformance of invoice.performances) {
+    for (const aPerformance of data.performances) {
       result += volumeCreditsFor(aPerformance)
     }
     return result
@@ -59,14 +62,14 @@ const renderPainText = (data, invoice, plays) => {
 
   const getTotalAmount = () => {
     let result = 0
-    for (const aPerformance of invoice.performances) {
+    for (const aPerformance of data.performances) {
       result += amountFor(aPerformance)
     }
     return result
   }
 
-  let result = `청구 내역 (고객명: ${invoice.customer})\n`
-  for (const aPerformance of invoice.performances) {
+  let result = `청구 내역 (고객명: ${data.customer})\n`
+  for (const aPerformance of data.performances) {
     result += `  ${playFor(aPerformance).name}: ${usd(
       amountFor(aPerformance)
     )} (${aPerformance.audience}석)\n`
